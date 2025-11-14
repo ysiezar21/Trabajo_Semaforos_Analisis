@@ -11,7 +11,7 @@ Simulación de una intersección de 4 semáforos que rotan en sentido horario, u
 - **Interfaz minimalista** con diseño limpio y responsivo
 - **Todo en español** - variables, mensajes y comentarios
 
-## Estructura del Proyecto
+## Estructura del Trabajo
 
 ```
 src/
@@ -66,3 +66,4 @@ npm run build
 - **Botón Iniciar**: Comienza la simulación
 - **Botón Detener**: Pausa y fuerza todos los semáforos a rojo
 - **Contador**: Muestra tiempo restante del semáforo actual
+
