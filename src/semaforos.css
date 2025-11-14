@@ -1,0 +1,170 @@
+/* Variables globales y estilos base */
+:root {
+  color: #1a1a1a;
+  background: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #4a4a4a;
+}
+
+/* Estilos obsoletos para fallback */
+.semaforos-stub { text-align: center; padding: 2rem }
+.semaforos-stub p { color: #808080 }
+.stub-grid { display: flex; gap: 12px; justify-content: center; margin-top: 1rem }
+.stub-light { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700 }
+.stub-light.green { background: #2f9e44 }
+.stub-light.red { background: #c92a2a }
+
+/* ============================================ */
+/* CONTENEDOR PRINCIPAL Y CONTROLES */
+/* ============================================ */
+
+/* Contenedor principal de la aplicación */
+.semaforos-app { padding: 40px 20px; max-width: 980px; margin: 0 auto; text-align: center }
+
+/* Título principal: "🚦 Intersección de Semáforos" */
+.semaforos-app h1 { font-size: 28px; font-weight: 300; letter-spacing: -0.5px; margin: 0 0 30px 0; color: #fffdfd }
+
+/* Barra de controles: contiene input, botones y estado */
+.controls { display: flex; gap: 16px; align-items: center; justify-content: center; flex-wrap: wrap; margin-bottom: 40px }
+
+/* Etiqueta y input para la duración del semáforo */
+.controls label { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #fffefe }
+
+/* Campo numérico para ingresar duración (mínimo 5 segundos) */
+.controls input[type='number'] { width: 80px; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; background: #fafafa; color: #1a1a1a }
+.controls input[type='number']:disabled { opacity: 0.5; cursor: not-allowed }
+
+/* Botones Iniciar y Detener */
+.btn { padding: 10px 20px; border-radius: 4px; cursor: pointer; background: #f0f0f0; color: #1a1a1a; border: 1px solid #ddd; font-size: 14px; font-weight: 500; transition: all 0.2s ease }
+.btn:hover:not(:disabled) { background: #e0e0e0; border-color: #999 }
+.btn:disabled { opacity: 0.5; cursor: not-allowed }
+
+/* Texto que muestra el tiempo restante del semáforo actual */
+.status { font-size: 14px; color: #ffffff; font-weight: 400 }
+
+/* ============================================ */
+/* INTERSECCIÓN Y CALLES */
+/* ============================================ */
+
+/* Grid 3x3 que contiene la intersección completa con calles y semáforos */
+.intersection { 
+  width: 500px;
+  height: 500px;
+  margin: 80px auto; 
+  display: grid; 
+  grid-template-columns: 1fr 100px 1fr; 
+  grid-template-rows: 1fr 100px 1fr; 
+  align-items: center; 
+  justify-items: center;
+  position: relative;
+  background: #90ee90; /* Pasto verde alrededor de las calles */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Calle vertical (simulada con ::before) */
+.intersection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 120px;
+  height: 100%;
+  background: #a9a9a9; /* Gris para simular asfalto */
+  transform: translateX(-50%);
+  z-index: 0;
+}
+
+/* Calle horizontal (simulada con ::after) */
+.intersection::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  background: #a9a9a9; /* Gris para simular asfalto */
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+/* ============================================ */
+/* SEMÁFOROS INDIVIDUALES */
+/* ============================================ */
+
+/* Contenedor para cada semáforo (arriba, derecha, abajo, izquierda) */
+.light { 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  gap: 12px; 
+  min-height: 140px; 
+  justify-content: center;
+  position: relative;
+  z-index: 1; /* Por encima de las calles */
+  transform: translateY(10px); /* Bajados 10 píxeles */
+}
+
+/* Caja/armazón del semáforo: rectángulo gris opaco que contiene las 3 luces */
+.bulbs { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 5px; 
+  align-items: center;
+  background: #505050; /* Gris oscuro simulando metal */
+  padding: 8px;
+  border-radius: 5px;
+  width: 35px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 -2px 4px rgba(0,0,0,0.3); /* Sombras para efecto 3D */
+}
+
+/* Las 3 luces individuales (cada una es un círculo) */
+.bulb { 
+  width: 19px; 
+  height: 19px; 
+  border-radius: 50%; /* Hacer circular */
+  background: #1a1a1a; /* Negro por defecto (apagado) */
+  box-shadow: inset 0 -4px 8px rgba(0,0,0,0.6); /* Sombra interna para profundidad */
+  transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.12s ease /* Transición suave al cambiar */
+}
+
+/* Cuando una luz está ENCENDIDA, aplicar efecto de brillo */
+.bulb.on { 
+  transform: translateY(-1px); /* Levantar ligeramente */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(0,0,0,0.3) /* Sombra externa para destacar */
+}
+
+/* Cuando una luz está APAGADA, hacerla más oscura */
+.bulb.off { opacity: 0.3 }
+
+/* Colores cuando cada luz está ENCENDIDA (con degradado para realismo) */
+.bulb-red.on { background: linear-gradient(180deg,#ff6b6b,#c92a2a) } /* Rojo encendido */
+.bulb-yellow.on { background: linear-gradient(180deg,#ffd43b,#f59f00) } /* Amarillo encendido */
+.bulb-green.on { background: linear-gradient(180deg,#94d82d,#2f9e44) } /* Verde encendido */
+
+/* Etiqueta que identifica cada carril (Carril 1, 2, 3, 4) */
+.light-label { 
+  color: #475569; 
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase; /* Convertir a mayúsculas */
+  letter-spacing: 0.5px;
+}
+
+/* Posiciones de los 4 semáforos en el grid */
+.light-0 { grid-column: 2; grid-row: 1; } /* Arriba (norte) */
+.light-1 { grid-column: 3; grid-row: 2; } /* Derecha (este) */
+.light-2 { grid-column: 2; grid-row: 3; } /* Abajo (sur) */
+.light-3 { grid-column: 1; grid-row: 2; } /* Izquierda (oeste) */
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 600px) { 
+  .intersection { width: 380px; height: 380px } /* Reducir tamaño */
+  .bulb { width: 22px; height: 22px } /* Luces más pequeñas */
+  .bulbs { width: 60px; padding: 10px; gap: 6px } /* Ajustar caja del semáforo */
+}
